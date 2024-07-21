@@ -1,0 +1,53 @@
+﻿@article{RN3,
+   author = {Olivoto, Tiago},
+   title = {Lights, camera, pliman! An R package for plant image analysis},
+   journal = {Methods in Ecology and Evolution},
+   volume = {13},
+   number = {4},
+   pages = {789-798},
+   ISSN = {2041-210X
+2041-210X},
+   DOI = {10.1111/2041-210x.13803},
+   year = {2022},
+   type = {Journal Article}
+}
+
+@article{RN4,
+   author = {Pau, Grégoire and Fuchs, Florian and Sklyar, Oleg and Boutros, Michael and Huber, Wolfgang},
+   title = {EBImage—an R package for image processing with applications to cellular phenotypes},
+   journal = {Bioinformatics},
+   volume = {26},
+   number = {7},
+   pages = {979-981},
+   ISSN = {1367-4811
+1367-4803},
+   DOI = {10.1093/bioinformatics/btq046},
+   year = {2010},
+   type = {Journal Article}
+}
+
+@article{RN2,
+   author = {Schneider, Caroline A. and Rasband, Wayne S. and Eliceiri, Kevin W.},
+   title = {NIH Image to ImageJ: 25 years of image analysis},
+   journal = {Nature Methods},
+   volume = {9},
+   number = {7},
+   pages = {671-675},
+   ISSN = {1548-7091
+1548-7105},
+   DOI = {10.1038/nmeth.2089},
+   year = {2012},
+   type = {Journal Article}
+}
+
+@inbook{RN1,
+   author = {Suri, Shalu and Ruan, Gang and Winter, Jessica and Schmidt, Christine E.},
+   title = {Microparticles and Nanoparticles},
+   booktitle = {Biomaterials Science},
+   pages = {360-388},
+   ISBN = {9780123746269},
+   DOI = {10.1016/b978-0-08-087780-8.00034-6},
+   year = {2013},
+   type = {Book Section}
+}
+
