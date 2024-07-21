@@ -14,7 +14,7 @@ shiny::runGist('https://gist.github.com/Machanix/6f3548254d54a0df65cbc8718588fd0
 ```
 The interface of this app will be showed as pictures below 
 
-
+<img width="962" alt="App interface" src="https://github.com/user-attachments/assets/dc1e3108-d4cd-4cb6-be9a-9501d7e6a2fe">
 
 
 #### 2. Setting microscopic images that you want to analyze. 
