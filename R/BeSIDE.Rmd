@@ -1,0 +1,438 @@
+```{r, echo=FALSE}
+library(rsconnect)
+library(pliman) # requires Bioconductor package - EBImage
+library(EBImage)
+library(dplyr)
+
+# upload file by using only one FOLDER!!!
+
+microsizer <- function(a){
+  
+  input1 <- a
+  
+  img.files1 = list.files(path= a,
+                          pattern="*.jpg",
+                          full.names = TRUE)
+  
+
+  img1 <- readImage(img.files1) # each images in an array 2040 1528 3 5
+  dim(img1) # each image is in an array of 2040 x1528 x 3 x 5
+  
+
+  # resize images
+  img1 = resize(img1, w=510, h=382)
+  dim(img1)
+
+  
+  # adjust threshold and analyze picture
+  str(img1)
+  dim(img1)
+  colorMode(img1) = "Color"
+  colorMode(img1)
+  numberOfFrames(img1, type = "total") # 15 frames (RGB 3 frames x 5 images)
+  numberOfFrames(img1, type = "render") # 5 images
+  getFrame(img1,1, type="render") # "render" gets a single image
+  getFrames(img1, type="render")
+  ##
+
+  ##
+  ## each images in 'img1' object is called, analyzed...
+  ##
+  
+  npic = numberOfFrames(img1, type = "render") # total number of images
+  combine_sum = NULL # your final data?
+  
+  for (i in 1:npic) {
+    # 'i'th image in 'img1' object
+    #i = 1
+    x = analyze_objects(getFrame(img1,i,type="render"),
+                        marker = "id", 
+                        index = "I",          # <--- BI, I
+                        object_size = "large", # <--- small, medium, large, elarge
+                        lower_noise = 0.1,     # <--- change this?
+                        lower_size = NULL,     # <--- change this?
+                        upper_size = NULL,
+                        lower_eccent = NULL,
+                        lower_circ = NULL,
+                        plot = F)
+    # index https://tiagoolivoto.github.io/pliman/articles/indexes.html
+    # 'BI' using brightness for detecting objects??
+    # 'x' is the result of analyze_objects
+    names(x)
+    #[1] "results"          "statistics"       "object_rgb"       "object_index"     "efourier"        
+    #[6] "efourier_norm"    "efourier_error"   "efourier_power"   "efourier_minharm" "veins"           
+    #[11] "angles"           "width_at"         "mask"             "pcv"              "contours"        
+    #[16] "parms
+    x$results %>% 
+      filter(circularity_norm > 0.6 & circularity > 2) %>%
+      select(id, diam_mean, area, circularity, circularity_norm) %>% 
+      arrange(circularity_norm)
+    #
+    y = get_measures(x, dpi= 3.911925)
+    names(y)
+    class(y)
+    class(y) = "data.frame"
+    y %>% 
+      filter(circularity_norm > 0.6 & circularity > 2) %>%
+      select(id, diam_mean, area, circularity, circularity_norm) %>% 
+      arrange(circularity_norm)
+    # collecting/combining results
+    combine_sum = bind_rows(combine_sum, y, .id="img")
+  }
+  combinebead <- combine_sum %>% select(diam_mean)
+  return(combinebead)
+  }
+##
+# Common plot rendering function
+render_custom_plot <- function(data, fill_color, col, plot_type, name) {
+   name <- ggplot(data = data) +
+    aes(x = diam_mean, y = after_stat(density)) +
+    {
+      if (plot_type == "hist") geom_histogram(alpha = 0.4, fill = fill_color, col = col) 
+      else geom_density(alpha = 0.4, fill = fill_color)
+    } +
+    scale_x_continuous(expand = c(0, 0)) +
+    scale_y_continuous(expand = c(0, 0)) +
+    labs(x = "Bead size (um)", y = "Density") +
+    theme_minimal() +
+    theme(
+      axis.text.x = element_text(size = 10),
+      axis.text.y = element_text(size = 10),
+      legend.position = "bottom",
+      plot.title = element_text(hjust = 0.5),
+      panel.grid.major = element_blank(),
+      panel.grid.minor = element_blank(),
+      axis.line = element_line(colour = "black"),
+      legend.text = element_text(size = 15),
+      title = element_text(size = 12)
+    )
+  plot(name)
+
+}
+
+##
+#APPLICATION PART
+#Tools that have to be loaded 
+library(shiny)
+library(shinyFiles) 
+library(bslib)
+library(DT)
+library(ggplot2)
+library(colourpicker)
+library(shinyalert)
+library(readxl)
+library(zip)
+
+## UI part
+ui <- page_sidebar(
+  title = h1(strong("BeSIDE")),
+  
+  
+  #Heading of the app
+  mainPanel( h3(strong("BeSIDE - Bead Size Distribution Estimator")),
+             "This application is the useful for estimating the size and number of microparticles by using unlimited microscopic pictures and automatically save in the folder",
+             br(),
+             br(),
+             tabPanel("System Status", verbatimTextOutput("status"))
+           
+             ),
+
+  sidebar = sidebar(
+    bg = "white",
+    accordion(
+      accordion_panel(
+        "Select all files",
+        br(),
+        fileInput("files", "Choose files", multiple = TRUE, accept = c('image/png', 'image/jpeg')),
+        br(),
+        actionButton("start", label = "RUN",
+                     style="color:white; background-color: black; border-color: white"),
+       ),
+      accordion_panel(
+        
+        #Selecting color part       
+        "Select color",
+        strong("Histogram:", textOutput("value_H", inline = TRUE)),
+        colourInput("col_H", "Choose colour", "#666699"),
+        hr(),
+        
+        strong("Density histogram:", textOutput("value_D", inline = TRUE)),
+        colourInput("col_D", "Choose colour", "#666699"),
+        hr(),
+        
+        strong("Size histogram:", textOutput("value_S", inline = TRUE)),
+        colourInput("col_S", "Choose colour", "#666699"),
+        
+        #This part is the button "set" and "reset" for selecting color 
+        br(), 
+        actionButton("reset_C", "RESET"),
+        br(),
+        textOutput("complete"),
+        tags$head(tags$style("#complete{color: green;
+                               font-size: 15px;
+                               font-style: bold;}"))
+      ),
+      accordion_panel(
+        "Download",
+        br(),
+        "Download analyzed data",
+        br(),
+        br(),
+        downloadButton("download", "Download")
+      )
+      
+    ),
+    
+  ),
+  
+  navset_card_underline(
+    title = "Data and Histogram",
+    nav_panel("Image", 
+              fluidRow(column(3, 
+                              br(),
+                              uiOutput("selectUI"),
+                              br(),
+                              strong ("Datapath"),
+                              br(),
+                              br(),
+                              textOutput('path')),
+                       column(3),
+                       column(3, 
+                              br(),
+                              br(),
+                              imageOutput("image")))),
+    nav_panel(
+      "Overall",
+      DTOutput(outputId = "SUM")
+    ),
+    nav_panel(
+      "Histogram",
+      plotOutput(outputId = "HTSUM")
+    ),
+    nav_panel(
+      "Density",
+      plotOutput(outputId = "HTDEN")
+    ),
+    nav_panel(
+      "Size",
+      plotOutput(outputId = "HTSIZE")
+    )
+  ),
+  
+  mainPanel(
+    fluidRow(
+      column(3, actionButton("modify", label = "UPDATE")),
+      column(3, actionButton("reset", label = "RESET")),
+      column(3, actionButton("exit", label = "CLOSE",
+                             style="color:white; background-color: coral; border-color: white"))
+      
+    )
+  )
+)
+
+
+server <- function(input, output, session) {
+
+  observeEvent(input$exit, {stopApp()})
+  
+  ###when click reset button
+  
+  observeEvent(input$reset, {
+    # Initialize reactive values
+    uploaded_files <- reactiveVal(NULL)
+    dir_path <- reactiveVal(NULL)
+    EEE <- NULL
+    system_status("System is reset completely")
+    # Clear outputs
+    output$selectUI <- renderUI(NULL)
+    output$image <- renderImage({NULL}, deleteFile = T)
+    output$HTSUM <- renderPlot(NULL)
+    output$HTDEN <- renderPlot(NULL)
+    output$HTSIZE <- renderPlot(NULL)
+    output$SUM <- renderDT(NULL)
+    output$path <- renderText(NULL)
+  })
+  
+  #color selection
+  #============================================
+  output$value_S <- renderText(input$col_S)
+  output$value_D <- renderText(input$col_D)
+  output$value_H <- renderText(input$col_H)
+  
+  observeEvent(input$reset_C,
+               {
+                 updateColourInput(session, "col_S",
+                                   value = "#666699")
+                 updateColourInput(session, "col_D",
+                                   value = "#666699")
+                 updateColourInput(session, "col_H",
+                                   value = "#666699")
+                 output$value_S <- renderText("#666699")
+                 output$value_D <- renderText("#666699")
+                 output$value_H <- renderText("#666699")
+                 
+                 output$complete <- renderText("Reset is done")
+                 
+               })
+  
+  #============================================  
+  uploaded_files <- reactive({
+    req(input$files)
+    input$files
+  })
+  
+dir_path <- reactive({
+    req(input$files)
+    # Extract the directory from the first uploaded file path
+    dirname(uploaded_files()$datapath[1])
+})
+  
+# Output the directory path
+output$path <- renderText({
+  dir_path()
+})
+  # Reactive value to store the system status
+  system_status <- reactiveVal("System is idle")
+  
+  # Output the system status
+  
+  output$status <- renderText({
+    system_status()
+  })
+  
+  temp <- file.path(tempdir(), "plots")
+  dir.create(temp, showWarnings = FALSE)
+  
+  #--------------------------------
+  
+  choice <- reactive({ 
+                req(input$files)
+                selectInput("selectedImage", strong("Select Image to Display"), 
+                choices = input$files$name)
+    })
+  
+  observe({
+    req(choice())
+    output$selectUI <- renderUI({choice()})
+    output$image <- renderImage({
+      req(input$selectedImage)
+      selectedFile <- uploaded_files()[input$files$name == input$selectedImage, ]
+      if (nrow(selectedFile) > 0) {
+        list(src = selectedFile$datapath, 
+             contentType = 'image/png', 
+             width = 400, 
+             height = "auto")
+      } 
+    }, deleteFile = F)
+    output$path <- renderText({
+      dir_path() })
+    system_status("All files are uploaded")
+  })
+  
+
+  output$path <- renderText({
+    dir_path() })
+  
+### when click start button, histogram will be created
+  observeEvent(input$start, {
+    system_status("Analyzing is done")
+    output$resettext <- renderText(NULL)
+    pp <- dir_path()
+    EEE <- microsizer(pp)
+ 
+  #for updating color of plot   
+    summ <- reactive({
+      render_custom_plot(EEE, "azure2", "azure3", "hist", "HTSUM") +
+        geom_density(alpha = 0.3, fill = input$col_H)})
+    
+    den <- reactive({ render_custom_plot(EEE, input$col_D, "black", "density", "HTDEN") })
+    
+    size <- reactive({ render_custom_plot(EEE, input$col_S, "black", "hist", "HTSIZE")})
+    
+    table <- reactive({ datatable(EEE, options = list(pageLength = 5))})
+    
+    # Render plots and data table
+    output$HTSUM <- renderPlot({summ()})
+    
+    output$HTDEN <- renderPlot({den()})
+    
+    output$HTSIZE <- renderPlot({size()})
+  
+    output$SUM <- renderDT({table()})
+    
+    pre_csv <- write.csv(EEE, file.path(pp, "RAWDATA.csv"))
+    
+    # Enable the download button
+    shinyjs::enable("download")
+  })
+
+  observeEvent(input$modify, {
+    system_status("Analyzing is updated")
+    output$complete <- (NULL)
+    pp <- dir_path()
+    path_result_csv <- file.path(pp, "RAWDATA.csv")
+    SSS <- read.csv(path_result_csv)
+    
+    summ2 <- reactive({
+      render_custom_plot(SSS, "azure2", "azure3", "hist", "HTSUM") +
+        geom_density(alpha = 0.3, fill = input$col_H)})
+    
+    den2 <- reactive({ render_custom_plot(SSS, input$col_D, "black", "density", "HTDEN") })
+    
+    size2 <- reactive({ render_custom_plot(SSS, input$col_S, "black", "hist", "HTSIZE")})
+    
+    table2 <- reactive({ datatable(SSS, options = list(pageLength = 5))})
+    
+    # Enable the download button
+    shinyjs::enable("download")
+  })
+
+  output$download <- downloadHandler(
+    filename = function() {
+      paste("tables_and_plots", Sys.Date(), ".zip", sep = "")
+    },
+    content = function(file) {
+      # Create a temporary directory for files
+      temp_dir <- tempfile()
+      dir.create(temp_dir)
+      
+      # Define folder name inside the ZIP
+      folder_name <- "tables_and_plots"
+      folder_path <- file.path(temp_dir, folder_name)
+      dir.create(folder_path)
+      
+      # Define filenames for the tables and plots
+      table1_filename <- file.path(folder_path, "table1.csv")
+      hist1_filename <- file.path(folder_path, "hist1.png")
+      hist2_filename <- file.path(folder_path, "hist2.png")
+      hist3_filename <- file.path(folder_path, "hist3.png")
+      
+      # Save tables as CSV
+      write.csv(table(), table1_filename, row.names = FALSE)
+
+      
+      # Save plots as PNG
+      png(hist1_filename)
+      print(summ())
+      dev.off()
+      
+      png(hist2_filename)
+      print(den())
+      dev.off()
+      
+      png(hist3_filename)
+      print(size())
+      dev.off()
+      
+      # Create the ZIP file with the single folder inside
+      zip::zipr(file, files = folder_path, recurse = TRUE)
+      
+      # Clean up the temporary directory
+      unlink(temp_dir, recursive = TRUE)
+    }
+  )
+}
+
+shinyApp(ui = ui, server = server)
+
+```
