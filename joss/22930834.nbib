@@ -1,0 +1,57 @@
+PMID- 22930834
+OWN - NLM
+STAT- MEDLINE
+DCOM- 20120917
+LR  - 20240625
+IS  - 1548-7105 (Electronic)
+IS  - 1548-7091 (Print)
+IS  - 1548-7091 (Linking)
+VI  - 9
+IP  - 7
+DP  - 2012 Jul
+TI  - NIH Image to ImageJ: 25 years of image analysis.
+PG  - 671-5
+AB  - For the past 25 years NIH Image and ImageJ software have been pioneers as open 
+      tools for the analysis of scientific images. We discuss the origins, challenges 
+      and solutions of these two programs, and how their history can serve to advise 
+      and inform other software projects.
+FAU - Schneider, Caroline A
+AU  - Schneider CA
+AD  - Laboratory for Optical and Computational Instrumentation, University of Wisconsin 
+      at Madison, Madison, Wisconsin, USA.
+FAU - Rasband, Wayne S
+AU  - Rasband WS
+FAU - Eliceiri, Kevin W
+AU  - Eliceiri KW
+LA  - eng
+GR  - RC2 GM092519/GM/NIGMS NIH HHS/United States
+PT  - Historical Article
+PT  - Journal Article
+PT  - Research Support, N.I.H., Extramural
+PL  - United States
+TA  - Nat Methods
+JT  - Nature methods
+JID - 101215604
+SB  - IM
+MH  - *Computational Biology/history/methods/trends
+MH  - History, 20th Century
+MH  - History, 21st Century
+MH  - Image Processing, Computer-Assisted/*methods
+MH  - National Institutes of Health (U.S.)
+MH  - Software/*history/trends
+MH  - United States
+PMC - PMC5554542
+MID - NIHMS876304
+COIS- Competing financial interests The authors declare no competing financial 
+      interests.
+EDAT- 2012/08/30 06:00
+MHDA- 2012/09/18 06:00
+PMCR- 2017/08/13
+CRDT- 2012/08/30 06:00
+PHST- 2012/08/30 06:00 [entrez]
+PHST- 2012/08/30 06:00 [pubmed]
+PHST- 2012/09/18 06:00 [medline]
+PHST- 2017/08/13 00:00 [pmc-release]
+AID - 10.1038/nmeth.2089 [doi]
+PST - ppublish
+SO  - Nat Methods. 2012 Jul;9(7):671-5. doi: 10.1038/nmeth.2089.
