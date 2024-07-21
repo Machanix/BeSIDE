@@ -31,6 +31,11 @@ The tutorial and source code for this application are available on GitHub. As th
 
 # Figure
 
+![\label{fig:Fig1}](BeSIDE_appinterface.png)
+<div align="center"> Fig 1. The BeSIDE application interface. . </div>
+
+![\label{fig:Fig2}](BeSIDE_resultDP.png)
+<div align="center"> Fig 2. The BeSIDE application after analyze microscopic images. The results will be as histograms including size histogram, density histogram, and an overall histogram. . </div>
 
 # Acknowledgement
 I would like to extend my gratitude to Professor In-Geol Choi and the members of the Computational & Synthetic Biology Lab in the Department of Biotechnology at Korea University for their invaluable assistance in the development and enhancement of this application.
