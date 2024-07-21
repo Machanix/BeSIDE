@@ -31,7 +31,7 @@ The tutorial and source code for this application are available on GitHub. As th
 
 # Figure
 
-![\label{fig:Fig1}](BeSIDE_appinterface.png)
+![\label{fig:Fig1}](BeSIDE_Appinterface.png)
 <div align="center"> Fig 1. The BeSIDE application interface. . </div>
 
 ![\label{fig:Fig2}](BeSIDE_resultDP.png)
