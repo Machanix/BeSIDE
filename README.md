@@ -14,33 +14,23 @@ shiny::runGist('https://gist.github.com/Machanix/6f3548254d54a0df65cbc8718588fd0
 ```
 The interface of this app will be showed as pictures below 
 
-<img width="962" alt="App interface" src="https://github.com/user-attachments/assets/dc1e3108-d4cd-4cb6-be9a-9501d7e6a2fe">
+<img width="932" alt="App interface" src="https://github.com/user-attachments/assets/fc484297-9377-42f4-918c-b787b0cbb27b">
 
 
 #### 2. Setting microscopic images that you want to analyze. 
 Each picture has to rename as Img1, Img2, Img3,... before analyzing step. Notice that this version can be applied with microscopic picture with 20X or magnitude equal as 200 only.
 
 
-
-
-
+<img width="550" alt="Screenshot 2024-07-21 at 10 49 19 AM" src="https://github.com/user-attachments/assets/9526fde8-c9fd-4aac-b705-2e23d8c7e17a">
 
  #### 3. Run "BeSIDE.R" for opening application for analyzing results
 3.1 For selecting files "CLICK Browse" for choosing the all microscopic that users want to analyze all at once. After choosing, "CLICK RUN" and system will run autonomically. Please waiting until text  "Analysis is done" happened. 
 
-
-
- 
 3.2 Select color that you want to design the histogram graph. The selected color will be updated and applied to histogram graaph autonomically. If you want to reset color as default, you can just click "RESET" button in color part in side bar.
    
-
+<img width="1016" alt="Screenshot 2024-07-21 at 11 33 03 AM" src="https://github.com/user-attachments/assets/5896d1c9-6f35-447a-9cbb-a22728363a47">
 
 3.3 When users already applied the desirable color. You can download all of raw data table and all histogram plot at once by clicking "DOWNLOAD BUTTON". All files will be downloaded and compress as .zip file that users can extract and get the all data and images.
-
-
-
-
-
 
 3.4 For analyzing new microscopic images, users just click "RESET" in the bottom of the app interface. All previous data and images will be eliminated and the server will be ready to analyze the new one.
 
