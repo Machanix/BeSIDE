@@ -21,7 +21,7 @@ The interface of this app will be showed as pictures below
 Each picture has to rename as Img1, Img2, Img3,... before analyzing step. Notice that this version can be applied with microscopic picture with 20X or magnitude equal as 200 only.
 
 
-<img width="550" alt="Screenshot 2024-07-21 at 10 49 19 AM" src="https://github.com/user-attachments/assets/9526fde8-c9fd-4aac-b705-2e23d8c7e17a">
+<img width="1048" alt="Screenshot 2024-07-21 at 11 36 44 AM" src="https://github.com/user-attachments/assets/46ddaf8e-0b0d-4f5a-8097-a9823ce3399c">
 
  #### 3. Run "BeSIDE.R" for opening application for analyzing results
 3.1 For selecting files "CLICK Browse" for choosing the all microscopic that users want to analyze all at once. After choosing, "CLICK RUN" and system will run autonomically. Please waiting until text  "Analysis is done" happened. 
