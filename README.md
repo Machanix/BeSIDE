@@ -1,6 +1,6 @@
-# BeSIDE
-#### BeSIDE - Bead Size Distribution Estimator
-BeSIDE (Bead Size Distribution Estimator) is the program created for estimate the size of microparticles by using many microscopic picture for analyzing before visualize in th form of various histograms and raw data.csv.  
+# BeSiDE
+#### BeSiDE - Bead Size Distribution Estimator
+BeSiDE (Bead Size Distribution Estimator) is the program created for estimate the size of microparticles by using many microscopic picture for analyzing before visualize in th form of various histograms and raw data.csv.  
 
 
 ## Running procedure 
