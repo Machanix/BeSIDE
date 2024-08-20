@@ -34,6 +34,8 @@ The tutorial and source code for this application are available on the GitHub re
 ![\label{fig:Fig1}](BeSiDE_Appinterface.png)
 <div align="center"> Figure 1. The BeSiDE application interface. The interface can be divided into three sections (Sidebar menu, Status display, and Main panel). </div>
 
+&nbsp;
+
 ![\label{fig:Fig2}](BeSiDE_resultDP.png)
 <div align="center"> Figure 2. The BeSiDE application after analyze microscopic images. The results will be as histograms including size histogram, density histogram, and an overall histogram. </div>
 
